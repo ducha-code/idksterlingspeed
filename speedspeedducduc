@@ -1,0 +1,21 @@
+-- LocalScript
+
+-- Get the local player and their character
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- Function to set walk speed
+local function setWalkSpeed()
+    -- Ensure the character has a humanoid and set its walkspeed to 50
+    local humanoid = character:WaitForChild("Humanoid")
+    humanoid.WalkSpeed = 50
+end
+
+-- Call the function when the character is added
+setWalkSpeed()
+
+-- Reapply walk speed if the character respawns
+player.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    setWalkSpeed()
+end)
