@@ -1,3 +1,7 @@
+local button = Instance.new("TextButton")
+button.Name = "SPEED: ON/OFF"
+button.Size = UDim2.new(0, 150, 0, 50)
+button.Position = UDim2.new(0.5, -75, 0.9, -25)
 -- LocalScript
 
 -- Get the local player and their character
