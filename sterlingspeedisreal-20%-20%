@@ -10,11 +10,15 @@ toggleButton.Position = UDim2.new(0.5, -100, 0.5, -25)
 toggleButton.Text = "Disable WalkSpeed"
 toggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
--- Variables to track state and humanoid
+-- Variables to track state, humanoid, and drag mechanics
 local isEnabled = true
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
+
+local dragging = false
+local dragStart = nil
+local startPos = nil
 
 -- Function to set the walk speed
 local function setWalkSpeed(enabled)
@@ -52,3 +56,21 @@ end)
 
 -- Initialize walk speed based on toggle state
 setWalkSpeed(isEnabled)
+
+-- Draggable functionality
+toggleButton.MouseButton1Down:Connect(function(input)
+    dragging = true
+    dragStart = input.Position
+    startPos = toggleButton.Position
+end)
+
+toggleButton.MouseMove:Connect(function(input)
+    if dragging then
+        local delta = input.Position - dragStart
+        toggleButton.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+toggleButton.MouseButton1Up:Connect(function()
+    dragging = false
+end)
