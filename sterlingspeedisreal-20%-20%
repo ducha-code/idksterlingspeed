@@ -1,0 +1,54 @@
+-- Create a ScreenGui to hold the toggle button
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create a TextButton for the on/off toggle
+local toggleButton = Instance.new("TextButton")
+toggleButton.Parent = screenGui
+toggleButton.Size = UDim2.new(0, 200, 0, 50)
+toggleButton.Position = UDim2.new(0.5, -100, 0.5, -25)
+toggleButton.Text = "Disable WalkSpeed"
+toggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+
+-- Variables to track state and humanoid
+local isEnabled = true
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Function to set the walk speed
+local function setWalkSpeed(enabled)
+    if enabled then
+        humanoid.WalkSpeed = 50
+    else
+        humanoid.WalkSpeed = 16  -- Default Roblox walk speed
+    end
+end
+
+-- Toggle function for button press
+local function toggleWalkSpeed()
+    isEnabled = not isEnabled
+    setWalkSpeed(isEnabled)
+
+    -- Update button text and color
+    if isEnabled then
+        toggleButton.Text = "Disable WalkSpeed"
+        toggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)  -- Red for enabled
+    else
+        toggleButton.Text = "Enable WalkSpeed"
+        toggleButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Green for disabled
+    end
+end
+
+-- Connect the button click event to toggle function
+toggleButton.MouseButton1Click:Connect(toggleWalkSpeed)
+
+-- Ensure the walk speed is set correctly if the player respawns
+player.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    humanoid = character:WaitForChild("Humanoid")
+    setWalkSpeed(isEnabled)
+end)
+
+-- Initialize walk speed based on toggle state
+setWalkSpeed(isEnabled)
